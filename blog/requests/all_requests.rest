@@ -1,0 +1,12 @@
+GET http://localhost:3004/api/blogs
+
+#### add new blog
+POST http://localhost:3004/api/blogs
+Content-Type: application/json
+
+{
+    "title": "how to test logs",
+    "author": "fullStackOpen",
+    "url": "fso.com",
+    "likes": 964
+}
