@@ -4,7 +4,7 @@ const logger = require('../utils/logger')
 
 
 blogsRouter.get('/', (request, response) => {
-    logger.info('getting all blogs')
+  logger.info('getting all blogs')
   Blog.find({}).then(blogs => {
     logger.info('all blogs...', blogs)
     response.json(blogs)
