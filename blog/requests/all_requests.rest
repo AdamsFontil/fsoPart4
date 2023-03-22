@@ -1,11 +1,11 @@
-GET http://localhost:3001/api/blogs
+GET http://localhost:2004/api/blogs
 
 #### add new blog
-POST http://localhost:3001/api/blogs
+POST http://localhost:2004/api/blogs
 Content-Type: application/json
 
 {
-    "title": "how to test modules",
+    "title": "how to test backend",
     "author": "fullStackOpen",
     "url": "fso.com",
     "likes": 96334

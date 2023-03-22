@@ -1,0 +1,49 @@
+const Blog = require('../models/blog')
+
+const initialBlogs = [
+  {
+    'title': 'how to test backendyyy',
+    'author': 'fullStackOpen',
+    'url': 'fso.com',
+    'likes': 96,
+    'id': '6417dc934e4784ec2c0f2004'
+  },
+  {
+    'title': 'how to test logsyyy',
+    'author': 'fullStackOpen',
+    'url': 'fso.com',
+    'likes': 964,
+    'id': '6417dcf35a7023cb1f647986'
+  },
+  {
+    'title': 'how to test modulesyyy',
+    'author': 'fullStackOpen',
+    'url': 'fso.com',
+    'likes': 96334,
+    'id': '64184c438f0d84a238d26128'
+  },
+  {
+    'title': 'testing backendyyyy',
+    'author': 'fullStackOpen',
+    'url': 'fso.com',
+    'likes': 96334,
+    'id': '641b5ce4313f6d7164824291'
+  },
+]
+
+const nonExistingId = async () => {
+  const blog = new Blog({ content: 'willremovethissoon' })
+  await blog.save()
+  await blog.deleteOne()
+
+  return blog._id.toString()
+}
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
+module.exports = {
+  initialBlogs, nonExistingId, blogsInDb
+}

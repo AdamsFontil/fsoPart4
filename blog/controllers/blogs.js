@@ -3,12 +3,11 @@ const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 
 
-blogsRouter.get('/', (request, response) => {
+blogsRouter.get('/', async (request, response) => {
   logger.info('getting all blogs')
-  Blog.find({}).then(blogs => {
-    logger.info('all blogs...', blogs)
-    response.json(blogs)
-  })
+  const blogs = await Blog.find({})
+  logger.info('all blogs...', blogs)
+  response.json(blogs)
 })
 
 blogsRouter.get('/:id', (request, response, next) => {
@@ -23,7 +22,7 @@ blogsRouter.get('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
   const blog = new Blog({
@@ -32,12 +31,14 @@ blogsRouter.post('/', (request, response, next) => {
     url: body.url,
     likes: body.likes
   })
-
-  blog.save()
-    .then(savedBlog => {
-      response.json(savedBlog)
-    })
-    .catch(error => next(error))
+  if (!blog.likes) {
+    blog.likes = 0
+  } else if (!blog.title || !blog.url) {
+    console.log('no title or no url')
+    return response.status(400).send({ error: 'title or url missing' })
+  }
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', (request, response, next) => {
