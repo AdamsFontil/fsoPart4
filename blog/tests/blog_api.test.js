@@ -1,19 +1,37 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
-
 const api = supertest(app)
 
 
-test('blogs are returned as json and their lengths too', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-  const response = await api.get('/api/blogs')
+const Blog = require('../models/blog')
 
-  expect(response.body).toHaveLength(response.body.length)
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  console.log('cleared')
+
+  for (let blog of helper.initialBlogs) {
+    console.log('blogs', blog)
+    let blogObject = new Blog(blog)
+    await blogObject.save()
+    console.log('saved')
+  }
+
+  console.log('done')
 })
+
+
+
+
+test('blogs are returned as json and their lengths too', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.status).toBe(200)
+  expect(response.headers['content-type']).toMatch(/application\/json/)
+
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
 
 test('id exists', async () => {
   const response = await api.get('/api/blogs')
@@ -109,18 +127,7 @@ test('no title or url mean 400', async () => {
     .post('/api/blogs')
     .send(newBlog)
     .expect(400)
-
-  const response = await api.get('/api/blogs')
-
-  const lastBlog = response.body.slice(-1)[0]
-  expect(lastBlog.likes).toBe(0)
 })
-
-
-
-
-
-
 
 
 

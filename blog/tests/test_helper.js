@@ -2,28 +2,28 @@ const Blog = require('../models/blog')
 
 const initialBlogs = [
   {
-    'title': 'how to test backendyyy',
+    'title': 'how to test backend',
     'author': 'fullStackOpen',
     'url': 'fso.com',
     'likes': 96,
     'id': '6417dc934e4784ec2c0f2004'
   },
   {
-    'title': 'how to test logsyyy',
+    'title': 'how to test logs',
     'author': 'fullStackOpen',
     'url': 'fso.com',
     'likes': 964,
     'id': '6417dcf35a7023cb1f647986'
   },
   {
-    'title': 'how to test modulesyyy',
+    'title': 'how to test modules',
     'author': 'fullStackOpen',
     'url': 'fso.com',
-    'likes': 96334,
+    'likes': 9634,
     'id': '64184c438f0d84a238d26128'
   },
   {
-    'title': 'testing backendyyyy',
+    'title': 'testing backend',
     'author': 'fullStackOpen',
     'url': 'fso.com',
     'likes': 96334,
