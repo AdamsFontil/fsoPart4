@@ -5,7 +5,7 @@ const initialBlogs = [
     'title': 'how to test backend',
     'author': 'fullStackOpen',
     'url': 'fso.com',
-    'likes': 96,
+    'likes': 96405,
     'id': '6417dc934e4784ec2c0f2004'
   },
   {
@@ -32,7 +32,7 @@ const initialBlogs = [
 ]
 
 const nonExistingId = async () => {
-  const blog = new Blog({ content: 'willremovethissoon' })
+  const blog = new Blog({ title: 'this has id but it gets removed from db' })
   await blog.save()
   await blog.deleteOne()
 
