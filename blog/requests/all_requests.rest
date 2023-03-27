@@ -1,12 +1,26 @@
-GET http://localhost:2004/api/blogs
+GET http://localhost:3004/api/blogs
 
 #### add new blog
-POST http://localhost:2004/api/blogs
+POST http://localhost:3004/api/blogs
 Content-Type: application/json
 
 {
-    "title": "how to test backend",
+    "title": "testingPostnoId without user",
     "author": "fullStackOpen",
     "url": "fso.com",
     "likes": 96334
 }
+
+
+### Add new user
+POST http://localhost:3004/api/users
+Content-Type: application/json
+
+{
+    "username": "testingPostnoId",
+    "name": "Matti Luukkainen",
+    "password": "12345"
+}
+
+### Get all users
+GET http://localhost:3004/api/users/
