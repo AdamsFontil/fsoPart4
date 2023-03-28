@@ -2,6 +2,17 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 const User = require('../models/user')
+const { userExtractor } = require('../utils/middleware')
+// const jwt = require('jsonwebtoken')
+
+
+// const getTokenFrom = request => {
+//   const authorization = request.get('authorization')
+//   if (authorization && authorization.startsWith('Bearer ')) {
+//     return authorization.replace('Bearer ', '')
+//   }
+//   return null
+// }
 
 
 blogsRouter.get('/', async (request, response) => {
@@ -21,9 +32,11 @@ blogsRouter.get('/:id',  async (request, response) => {
 })
 
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', userExtractor, async (request, response) => {
   const body = request.body
-  const user = await User.findById(body.userId)
+  // const user = await User.findById(body.userId)
+  const userExtractor = request.user
+  const user = await User.findById(userExtractor.id)
 
   const blog = new Blog({
     title: body.title,
@@ -41,17 +54,32 @@ blogsRouter.post('/', async (request, response) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  // response.status(201).json(savedBlog)
-  response.json(savedBlog)
+  response.status(201).json(savedBlog)
+  // response.json(savedBlog)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  // const user = jwt.verify(request.token, process.env.SECRET)
+  const user = request.user
+
+  // console.log('blog',blog)
+  // console.log('user',user)
+  // console.log('bloguser',blog.user)
+  // console.log('bloguser',user.id)
+  if ( blog.user.toString() === user.id.toString() ) {
+    await Blog.findByIdAndRemove(request.params.id)
+    console.log('bloguser',blog.user.toString())
+    console.log('userid',user.id.toString())
+    response.status(204).end()
+  } else {
+    response.status(401).json({ error: 'Unauthorized' })
+  }
 })
 
 
-blogsRouter.put('/:id', async (request, response) => {
+
+blogsRouter.put('/:id', userExtractor, async (request, response) => {
   const body = request.body
 
   const blog = {
