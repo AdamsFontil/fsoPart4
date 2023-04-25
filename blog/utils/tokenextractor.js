@@ -1,4 +1,4 @@
 
 
 
-module.exports = tokenExtractor
+// module.exports = tokenExtractor
