@@ -1,0 +1,84 @@
+name: ci/cd for blog
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && !contains(github.event.commits.*.message, '#skip'))
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Check style
+        run: npm run lint
+  #     - name: build
+  #       run: npm run build
+  #     - name: test
+  #       run: npm run test
+  #     - name: e2e tests
+  #       uses: cypress-io/github-action@v5
+  #       with:
+  #         command: npm run test:e2e
+  #         start: npm run start-prod
+  #         wait-on: http://localhost:5000
+
+  #     - name: Setup flyctl
+  #       if: github.event_name == 'push'
+  #       uses: superfly/flyctl-actions/setup-flyctl@master
+  #       env:
+  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  #     - name: Deploy app
+  #       if: github.event_name == 'push'
+  #       run: flyctl deploy --remote-only
+  #       env:
+  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  #     - name: Notify of successful deployment
+  #       if: success()
+  #       uses: rjstone/discord-webhook-notify@v1
+  #       with:
+  #         avatarUrl:
+  #         username:
+  #         severity: info
+  #         text: A new version of pokedex has been deployed
+  #         webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+  #         description: to https://fragrant-silence-4491.fly.dev/ by ${{ github.event.pusher.name }}
+  #     - name: Notify of build fail
+  #       if: failure()
+  #       uses: rjstone/discord-webhook-notify@v1
+  #       with:
+  #         avatarUrl:
+  #         username:
+  #         severity: error
+  #         text: Something went wrong, the build failed
+  #         webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+  #         description: commit
+  #          ${{ github.event.head_commit.url }} by ${{ github.event.pusher.name }} broke the build
+
+
+
+
+
+  # tag_release:
+  #   name: Bump version and push tag
+  #   needs: [simple_deployment_pipeline]
+  #   runs-on: ubuntu-20.04
+  #   if: github.event_name == 'push'
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         DEFAULT_BUMP: patch
